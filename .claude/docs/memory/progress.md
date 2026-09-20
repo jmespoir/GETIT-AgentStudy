@@ -11,19 +11,22 @@
   - `server/supabaseClient.js` — anon 클라이언트 `supabase`, 요청별 `createUserClient(accessToken)`
   - `server/middleware/requireAuth.js` — `Authorization: Bearer` 토큰을 Supabase로 검증, `req.user`/`req.supabase` 주입
   - `server/routes/ingredients.js` — 재료 목록/추가/삭제
+  - `server/routes/favorites.js` — 즐겨찾기 목록/추가/해제. 해제는 행 `id`가 아니라 `recipe_id`로 삭제
   - `server/utils/response.js` — `sendSuccess`/`sendError` 공통 응답 헬퍼
   - `server/db/schema.sql` — `ingredients`, `favorites` 테이블 + RLS 정책 (**작성만 됨, 실행 여부는 확인 필요**)
 - **커밋·푸시 절차 스킬** — `.claude/skills/commit-and-push/SKILL.md`
-- **동작 확인된 응답(2026-09-21 로컬 실행)** — health 200, 토큰 없음/잘못된 토큰 401, 없는 경로 404, 깨진 JSON 400
+- **API 실동작 검증 완료 (2026-09-21, 실제 access token으로 로컬 실행)**
+  - 인증 실패 경로 — health 200, 토큰 없음/잘못된 토큰 401, 없는 경로 404, 깨진 JSON 400
+  - 즐겨찾기 — 목록 200, 추가 201, 중복 409, 빈값·미전달·숫자 타입 400, 공백 트림 동작, 해제 200, 없는 항목 해제 404
+  - 재료 — 목록 200, 추가 201, 중복 409, 빈값 400, 공백 트림 동작, 삭제 200, 없는 uuid·uuid 아닌 값 404
+  - Supabase `ingredients`/`favorites` 테이블과 RLS는 실제로 적용돼 있음이 확인됨 (`schema.sql` 실행 완료)
 
 ## 진행 중
 
-- **재료 API 실동작 검증** — 인증된 상태의 조회/추가/삭제(200·201·404·409)는 아직 실행해 보지 못함. 실제 사용자 토큰과 Supabase 테이블이 필요
-- **Supabase 프로젝트 설정** — `server/.env`에 `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `PORT` 항목이 채워져 있고 `.gitignore`로 제외됨. 스키마 적용 여부는 확인 필요
+- 없음. 서버 측 재료·즐겨찾기 기능은 검증까지 끝났고, 다음은 클라이언트다.
 
 ## 미착수
 
-- 즐겨찾기 API (`GET/POST/DELETE /api/favorites`)
 - 추천 API (`GET /api/recipes/recommendations`) — **레시피 데이터 출처 미정이라 CLAUDE.md에서 구현 보류 상태**
 - 클라이언트 전반 — 매직링크 로그인 화면, 재료 관리 화면, 공통 API 모듈, `@supabase/supabase-js` 설치(현재 client 의존성은 react/react-dom뿐)
 - 서버 CORS 설정 (`CLIENT_ORIGIN` 환경 변수는 CLAUDE.md에만 정의되어 있고 코드에 사용처 없음)
@@ -67,6 +70,7 @@ server/
   supabaseClient.js
   middleware/requireAuth.js
   routes/ingredients.js
+  routes/favorites.js
   utils/response.js
   db/schema.sql
   lib/                  # 빈 폴더, 사용처 없음
@@ -82,12 +86,12 @@ server: express 5, @supabase/supabase-js 2, dotenv. 실행 스크립트는 `npm 
 | 메서드 | 경로 | 인증 | 구현 | 동작 확인 |
 |---|---|---|---|---|
 | GET | `/api/health` | 불필요 | O | 200 확인됨 |
-| GET | `/api/ingredients` | 필요 | O | 401 경로만 확인, 인증 성공 경로 확인 필요 |
-| POST | `/api/ingredients` | 필요 | O (빈 이름 400, 중복 409) | 401 경로만 확인, 나머지 확인 필요 |
-| DELETE | `/api/ingredients/:id` | 필요 | O (없으면 404) | 401 경로만 확인, 나머지 확인 필요 |
-| GET | `/api/favorites` | 필요 | X | — |
-| POST | `/api/favorites` | 필요 | X | — |
-| DELETE | `/api/favorites/:recipeId` | 필요 | X | — |
+| GET | `/api/ingredients` | 필요 | O | 전 경로 확인됨 |
+| POST | `/api/ingredients` | 필요 | O (빈 이름 400, 중복 409) | 전 경로 확인됨 |
+| DELETE | `/api/ingredients/:id` | 필요 | O (없거나 uuid 형식이 아니면 404) | 전 경로 확인됨 |
+| GET | `/api/favorites` | 필요 | O | 전 경로 확인됨 |
+| POST | `/api/favorites` | 필요 | O (빈 `recipe_id` 400, 중복 409) | 전 경로 확인됨 |
+| DELETE | `/api/favorites/:recipeId` | 필요 | O (없으면 404) | 전 경로 확인됨 |
 | GET | `/api/recipes/recommendations` | 필요 | X (출처 미정으로 보류) | — |
 
 그 외: 매칭되지 않는 경로 404 핸들러, 잘못된 JSON 400 처리, 그 외 오류 500 핸들러가 `server/index.js`에 있음.

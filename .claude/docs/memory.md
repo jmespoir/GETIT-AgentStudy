@@ -3,16 +3,13 @@
 ## 현재 상태
 
 - 냉장고 재료로 레시피를 추천하는 서비스. 스택은 React(Vite) / Express / Supabase / Vercel로 고정.
-- 서버는 Supabase 토큰 인증과 재료 CRUD API(`/api/ingredients`)까지 구현됐고, 인증 실패 경로만 실제로 확인됐다.
+- 서버는 Supabase 토큰 인증, 재료 CRUD(`/api/ingredients`), 즐겨찾기 CRUD(`/api/favorites`)까지 구현·실동작 검증 완료. Supabase 스키마도 적용돼 있다.
 - 클라이언트는 "Hello, GETIT"만 렌더하는 스캐폴드 상태이고, API 호출은 아직 하나도 없다.
 
 ## 다음 할 일
 
-1. `server/db/schema.sql`을 Supabase SQL Editor에서 실행해 테이블·RLS 적용
-2. 매직링크로 access token을 받아 재료 CRUD 실동작 검증 (절차는 issues.md)
-3. 즐겨찾기 API 3개 구현 (`GET/POST/DELETE /api/favorites`)
-4. 클라이언트 매직링크 로그인 + 재료 관리 화면, 공통 API 모듈
-5. 서버 CORS(`CLIENT_ORIGIN`) 설정과 Vercel 배포
+1. 클라이언트 매직링크 로그인 + 재료 관리 화면, 공통 API 모듈
+2. 서버 CORS(`CLIENT_ORIGIN`) 설정과 Vercel 배포
 
 추천 API는 레시피 데이터 출처가 정해지기 전까지 손대지 않는다.
 
