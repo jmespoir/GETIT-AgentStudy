@@ -49,6 +49,10 @@ router.delete('/:id', async (req, res) => {
     .select('id');
 
   if (error) {
+    // uuid 형식이 아닌 id는 어떤 행과도 매칭되지 않으므로 '없는 재료'와 같게 취급한다.
+    if (error.code === '22P02') {
+      return sendError(res, '재료를 찾을 수 없습니다.', 404);
+    }
     console.error('재료 삭제 실패:', error);
     return sendError(res, '재료를 삭제하지 못했습니다.', 500);
   }

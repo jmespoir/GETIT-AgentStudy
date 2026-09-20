@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import { requireAuth } from './middleware/requireAuth.js';
 import ingredientsRouter from './routes/ingredients.js';
+import favoritesRouter from './routes/favorites.js';
 import { sendSuccess, sendError } from './utils/response.js';
 
 const app = express();
@@ -14,6 +15,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/ingredients', requireAuth, ingredientsRouter);
+app.use('/api/favorites', requireAuth, favoritesRouter);
 
 app.use((req, res) => {
   sendError(res, '요청한 경로를 찾을 수 없습니다.', 404);
