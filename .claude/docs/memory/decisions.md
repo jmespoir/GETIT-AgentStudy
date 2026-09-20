@@ -6,7 +6,7 @@
 ## 기술 스택 · 구조
 
 - 스택 고정: **React(Vite) / Express.js / Supabase / Vercel**, 언어는 **JavaScript**(ES Modules). TypeScript나 다른 프레임워크·DB·호스팅을 제안하지 않는다.
-- 최상위 앱 폴더는 `client/`, `server/` 둘뿐. 문서용 `docs/`는 예외로 허용(2026-09-21 결정).
+- 최상위 폴더는 `client/`, `server/` 둘뿐. 메모리·작업용 문서는 `.claude/docs/` 아래에 둔다(2026-09-21 결정).
 - 배포는 `client/`와 `server/`를 **각각 별도의 Vercel 프로젝트**로.
 
 ## API · 데이터 흐름

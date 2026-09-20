@@ -47,13 +47,14 @@
 ## 파일 구조 (node_modules 제외)
 
 ```
-.claude/skills/commit-and-push/SKILL.md
 CLAUDE.md
-memory.md
 promptLog.md
-docs/memory/progress.md
-docs/memory/decisions.md
-docs/memory/issues.md
+.claude/
+  skills/commit-and-push/SKILL.md
+  docs/memory.md              # 라우터
+  docs/memory/progress.md
+  docs/memory/decisions.md
+  docs/memory/issues.md
 client/
   index.html            # title: GETIT
   vite.config.js

@@ -20,9 +20,9 @@
 
 | 상황 | 파일 |
 |---|---|
-| 지금까지 뭐가 됐는지, 파일 구조·API 목록·의존성이 궁금할 때 | `docs/memory/progress.md` |
-| 왜 이렇게 정했는지, 또는 기존 결정을 바꾸려 할 때 | `docs/memory/decisions.md` |
-| 에러가 났을 때, 미검증·확인 필요 항목을 볼 때, 토큰 발급 절차가 필요할 때 | `docs/memory/issues.md` |
+| 지금까지 뭐가 됐는지, 파일 구조·API 목록·의존성이 궁금할 때 | `.claude/docs/memory/progress.md` |
+| 왜 이렇게 정했는지, 또는 기존 결정을 바꾸려 할 때 | `.claude/docs/memory/decisions.md` |
+| 에러가 났을 때, 미검증·확인 필요 항목을 볼 때, 토큰 발급 절차가 필요할 때 | `.claude/docs/memory/issues.md` |
 | 코딩 규칙·금지사항·API 응답 형식 | `CLAUDE.md` |
 | 지금까지 받은 지시와 그때의 결정 이력 | `promptLog.md` |
 | DB 테이블·RLS 정의 | `server/db/schema.sql` |
