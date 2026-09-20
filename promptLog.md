@@ -90,3 +90,120 @@ AI 에이전트(Claude Code)에게 지시한 프롬프트 원문과, 진행 중 
 - 파일명: `promptLog.md` (원문의 'prompthLog'는 오타로 확인)
 - 기록 범위: 프롬프트 원문 + 결정사항
 - 생성 후 커밋, 커밋 메시지에 `Co-Authored-By` 줄은 넣지 않음
+
+---
+
+## 2026-09-20
+
+### 5. Supabase 패키지 추가 후 다음 단계
+
+**프롬프트 원문**
+```
+supabase 패키지를 추가를 했는데 여기서 어떻게 하면 좋을까?
+```
+
+**결정사항**
+- 진행 범위: 재료(ingredients) CRUD API까지 (연결 확인 + 인증 미들웨어 포함)
+- Supabase 테이블은 아직 없음 → 실행할 SQL을 파일로 제공하고 실행은 사용자가 대시보드에서
+- 즐겨찾기·추천 API, 클라이언트 로그인 화면은 이번 범위에서 제외
+
+---
+
+## 2026-09-21
+
+### 6. dotenv 설치
+
+**프롬프트 원문**
+```
+dotenv 라이브러리를 설치까지 진행을 해줘
+```
+
+**결정사항**
+- `.env` 로딩은 Node 내장 `process.loadEnvFile()` 대신 `dotenv` 패키지 사용
+- `server/index.js`의 첫 import를 `dotenv/config`로 두어 supabaseClient보다 먼저 평가되게 함
+- 이번에 설치하는 패키지는 `dotenv` 하나뿐
+
+---
+
+### 7. 매직링크 access token 획득 방법
+
+**프롬프트 원문**
+```
+매직링크로 로그인해서 access token을 어떻게 얻어오는지 알려줘
+```
+
+**결정사항**
+- 방법 A(메일 링크 클릭 후 주소창 `#access_token` 복사)와 방법 B(`{{ .Token }}` 6자리 코드를 `/auth/v1/verify`로 교환) 두 가지를 안내
+- 메일 발송은 실제 발송이므로 에이전트가 임의로 실행하지 않음
+- Site URL을 `http://localhost:5173`으로 변경 권장
+
+---
+
+### 8. otp 요청 실패 (PGRST125)
+
+**프롬프트 원문**
+```
+set -a && . ./.env && set +a && curl -s -X POST "$SUPABASE_URL/auth/v1/otp" -H "apikey: $SUPABASE_ANON_KEY" -H "Content-Type: application/json" -d '{"email":" 본인이메일@example.com","create_user":true}'
+{"code":"PGRST125","details":null,"hint":null,"message":"Invalid path specified in request URL"}
+```
+
+**결정사항**
+- 원인: `.env`의 `SUPABASE_URL`에 `/rest/v1/` 경로가 붙어 있어 인증 엔드포인트 대신 REST API로 요청됨
+- `SUPABASE_URL`을 프로젝트 기본 주소(origin)만 남기도록 수정 (값은 출력하지 않음)
+- 이후 `.env.example`에도 같은 실수를 막는 주석을 추가하기로 함
+
+---
+
+### 9. 깃허브 업로드 (커밋 메시지 사전 제안)
+
+**프롬프트 원문**
+```
+깃허브에 올릴건데 커밋메세지를 먼저 제안을 해주고 진행하자
+```
+```
+커밋메세지를 한글로 진행해줘
+```
+
+**결정사항**
+- 커밋은 두 개로 분리 (서버 기능 / CLAUDE.md 문서 수정)
+- 커밋 메시지는 한글, `Co-Authored-By` 줄 없음
+- `.env.example`에 `SUPABASE_URL` 형식 주석 추가 후 커밋
+- `main`에 바로 커밋하고 push
+
+---
+
+### 10. 커밋·푸시 절차 스킬화
+
+**프롬프트 원문**
+```
+방금 깃허브에 올리는 진행방식을 스킬로 만들어줘
+```
+
+**결정사항**
+- 저장 위치: 프로젝트 안 `.claude/skills/commit-and-push/SKILL.md`
+- 고정할 규칙 4가지 모두 적용 — 한글 커밋 메시지, `Co-Authored-By` 제외, 메시지 사전 제안·승인, 비밀 파일 점검
+
+---
+
+### 11. 스킬 파일 커밋·푸시
+
+**프롬프트 원문**
+```
+응, 이 스킬 파일도 커밋하고 푸시해줘
+```
+
+**결정사항**
+- 방금 만든 `commit-and-push` 스킬 절차를 그대로 적용해 진행
+- 단일 커밋으로 `main`에 커밋 후 push
+
+---
+
+### 12. 프롬프트 로그 갱신
+
+**프롬프트 원문**
+```
+promptLog.md에도 오늘 프롬프트 추가해줘
+```
+
+**결정사항**
+- 기존 형식(프롬프트 원문 + 결정사항)을 유지하고 날짜 섹션을 이어서 추가
