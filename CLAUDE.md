@@ -94,7 +94,7 @@ TypeScript, 다른 프레임워크, 다른 DB/인증/호스팅 서비스로 바�
 ## 환경 변수
 변수 **이름**만 기록한다. 실제 값은 `.env`에만 두고 커밋하지 않는다.
 - client (`client/.env`): `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_API_BASE_URL`
-- server (`server/.env`): `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `CLIENT_ORIGIN`(CORS 허용 도메인)
+- server (`server/.env`): `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `PORT`(로컬 기본 4000), `CLIENT_ORIGIN`(CORS 허용 도메인)
 - 클라이언트 코드에는 `VITE_` 접두사 변수만 사용한다. 서비스 롤 키 등 비밀 키는 클라이언트에 절대 두지 않는다.
 - 새 환경 변수가 필요하면 이름과 용도를 설명하고 `.env.example`에 이름만 추가한다.
 
