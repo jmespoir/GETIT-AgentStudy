@@ -124,3 +124,7 @@ TypeScript, 다른 프레임워크, 다른 DB/인증/호스팅 서비스로 바�
 ## 작업 방식
 - 요구사항이 모호하거나 이 문서와 충돌하는 요청이 오면, **넘겨짚지 말고 먼저 질문해서 확인**한다.
 - 스키마 변경, 새 엔드포인트 추가, 새 환경 변수 추가는 먼저 내용을 설명한 뒤 진행한다.
+- **작업을 마칠 때 메모리를 갱신한다.** `.claude/docs/memory.md`는 **50줄 이하**로 유지한다(현재 상태 요약, 다음 할 일, 라우팅 표만). 상세 내용은 `.claude/docs/memory/` 아래 파일에 기록한 뒤 라우팅 표만 갱신한다.
+  - 완료된 작업·파일 구조·API 현황 → `.claude/docs/memory/progress.md`
+  - 번복하면 안 되는 결정 → `.claude/docs/memory/decisions.md`
+  - 이슈·미검증 항목·트러블슈팅 → `.claude/docs/memory/issues.md`
