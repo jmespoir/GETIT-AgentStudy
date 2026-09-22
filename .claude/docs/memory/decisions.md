@@ -51,6 +51,16 @@
 - **마크다운(`*.md`)은 포맷하지 않는다.** Prettier가 한글 표를 재정렬해 diff가 크게 흔들리기 때문.
 - Claude Code 훅(`.claude/settings.json` → `.claude/hooks/format.sh`)으로 자동 포맷한다. Edit·Write 직후 해당 파일, 응답 종료(Stop) 시 git 변경 파일 전체. auto 모드에서는 에이전트가 Bash로 파일을 고치므로 Stop 훅이 필요하다.
 
+## gstack · 에이전트 팀 (2026-09-22 결정)
+
+- gstack은 **사용자별 전역 설치**(`~/.claude/skills/gstack`, `--prefix` → `/gstack-*`)이고 저장소에 넣지 않는다. 팀 모드(required/optional)는 쓰지 않는다.
+- 웹 브라우징은 `/gstack-browse`로 한다.
+- **사용 금지**: `/gstack-ship`·`/gstack-qa`(자동 커밋·PR이 커밋 규칙과 충돌), `/gstack-land-and-deploy`·`/gstack-setup-deploy`(Vercel 별도 배포), `/gstack-setup-gbrain`·`/gstack-sync-gbrain`(메모리는 `.claude/docs/`만). QA는 리포트 전용 `/gstack-qa-only`로 한다.
+- 에이전트 팀은 `planner`·`backend`·`frontend`·`reviewer` 네 명이다(`.claude/agents/`). 역할과 스킬은 CLAUDE.md "에이전트 팀" 표 참고. 조율은 메인 세션이 하고, 에이전트끼리는 서로 호출하지 않는다.
+- **에이전트는 커밋하지 않는다.** 문서 규칙만으로는 gstack 스킬의 커밋 지시를 확실히 막을 수 없어서, 에이전트 전용 PreToolUse 훅(`.claude/hooks/block-agent-git.sh`)으로 `git commit/push/stash`와 `gh pr`을 차단한다.
+- 서브에이전트는 질문할 수 없으니 선택지는 스스로 고르되 **"사용자 확인 필요"로 보고**한다. 메인 세션은 사용자 확인을 받은 뒤 다음 단계로 간다.
+- gstack 스킬은 크기가 커서(60~130KB) 에이전트 `skills:`로 미리 주입하지 않는다. 필요할 때 Skill 도구로 호출한다.
+
 ## 작업 방식
 
 - 커밋 메시지는 **한글**, `Co-Authored-By` 줄은 넣지 않는다. 커밋 전에 메시지를 제안해 승인받는다. 절차는 `.claude/skills/commit-and-push/SKILL.md`.

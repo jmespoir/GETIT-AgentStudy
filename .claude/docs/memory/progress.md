@@ -22,6 +22,9 @@
   - 재료 — 목록 200, 추가 201, 중복 409, 빈값 400, 공백 트림 동작, 삭제 200, 없는 uuid·uuid 아닌 값 404
   - Supabase `ingredients`/`favorites` 테이블과 RLS는 실제로 적용돼 있음이 확인됨 (`schema.sql` 실행 완료)
 
+- **gstack 연동과 에이전트 팀 (2026-09-22)** — 사용자가 gstack v1.87.5.0을 전역 설치(`--prefix`, 텔레메트리 off). CLAUDE.md에 `## gstack`(명령 54개 전체를 용도별로 정리, 금지 목록)과 `## 에이전트 팀` 섹션 추가. `.claude/agents/`에 planner/backend/frontend/reviewer 추가. 에이전트 전용 git 차단 훅 추가(21개 케이스 테스트 통과). `/gstack-browse`가 번들 Chromium으로 localhost를 여는 것까지 확인
+  - setup이 전역 `~/.claude/settings.json`에 gstack 훅 4개(AskUserQuestion 관련 3개, Stop 타임라인 1개)를 추가함. 건드리지 않음
+
 ## 진행 중
 
 - 없음. 서버 측 재료·즐겨찾기 기능은 검증까지 끝났고, 다음은 클라이언트다.
@@ -58,6 +61,11 @@ promptLog.md
 .claude/
   settings.json               # 자동 포맷 훅 (PostToolUse, Stop)
   hooks/format.sh             # 훅 본체
+  hooks/block-agent-git.sh    # 에이전트 전용: 커밋·push·stash·PR 차단
+  agents/planner.md           # 에이전트 팀 (CLAUDE.md '에이전트 팀' 참고)
+  agents/backend.md
+  agents/frontend.md
+  agents/reviewer.md
   skills/commit-and-push/SKILL.md
   docs/memory.md              # 라우터
   docs/memory/progress.md

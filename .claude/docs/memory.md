@@ -6,6 +6,7 @@
 - 서버는 Supabase 토큰 인증, 재료 CRUD(`/api/ingredients`), 즐겨찾기 CRUD(`/api/favorites`)까지 구현·실동작 검증 완료. Supabase 스키마도 적용돼 있다.
 - 클라이언트는 "Hello, GETIT"만 렌더하는 스캐폴드 상태이고, API 호출은 아직 하나도 없다.
 - 코드 포맷은 Prettier + Claude Code 훅으로 자동 적용된다 (md 파일 제외).
+- gstack(전역, `/gstack-*`)과 4인 에이전트 팀(planner/backend/frontend/reviewer)이 설정돼 있다. 에이전트는 커밋하지 않는다.
 
 ## 다음 할 일
 
@@ -26,5 +27,7 @@
 | DB 테이블·RLS 정의 | `server/db/schema.sql` |
 | 커밋·푸시 절차 | `.claude/skills/commit-and-push/SKILL.md` |
 | 자동 포맷 훅이 이상하게 동작할 때 | `.claude/settings.json`, `.claude/hooks/format.sh` |
+| gstack 명령·금지 목록, 에이전트 팀 역할·진행 흐름 | `CLAUDE.md`의 `## gstack`, `## 에이전트 팀` |
+| 에이전트 개별 지침 | `.claude/agents/*.md` |
 
 최종 갱신: 2026-09-22

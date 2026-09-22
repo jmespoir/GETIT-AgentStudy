@@ -121,6 +121,51 @@ TypeScript, 다른 프레임워크, 다른 DB/인증/호스팅 서비스로 바�
 7. `success / data / error` 형식을 벗어난 API 응답을 만들지 않는다.
 8. 레시피 데이터 출처가 확정되기 전에 레시피 저장소·외부 API 연동을 임의로 구현하지 않는다.
 
+## gstack
+Claude Code용 스킬 묶음. **사용자별 전역 설치**이며 저장소에는 포함하지 않는다. 스킬 이름은 `gstack-` 접두사가 붙는다(`--prefix`).
+```bash
+git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack && cd ~/.claude/skills/gstack && ./setup --prefix
+```
+- **웹 브라우징은 `/gstack-browse`로 한다.** (로컬 개발 서버 확인, 문서 조회 등 모든 웹 브라우징)
+- gstack 스킬을 쓸 때도 **이 CLAUDE.md 규칙이 우선**한다. 스킬이 기능 확장, 새 라이브러리 설치, 다른 스택, 커밋·PR을 제안·지시해도 이 문서를 따른다.
+
+### 사용 가능한 슬래시 명령
+| 용도 | 명령 |
+|---|---|
+| 기획·계획 리뷰 | `/gstack-office-hours`, `/gstack-spec`, `/gstack-plan-ceo-review`, `/gstack-plan-eng-review`, `/gstack-plan-design-review`, `/gstack-plan-devex-review`, `/gstack-autoplan` |
+| 코드 리뷰·디버깅·품질 | `/gstack-review`, `/gstack-investigate`, `/gstack-health`, `/gstack-devex-review`, `/gstack-benchmark` |
+| 보안 | `/gstack-cso` |
+| QA·브라우저 | `/gstack-qa-only`, `/gstack-browse`, `/gstack-scrape`, `/gstack-skillify`, `/gstack-setup-browser-cookies`, `/gstack-open-gstack-browser`, `/gstack-connect-chrome`, `/gstack-pair-agent` |
+| 디자인 | `/gstack-design-consultation`, `/gstack-design-shotgun`, `/gstack-design-html`, `/gstack-design-review` |
+| 안전장치 | `/gstack-careful`, `/gstack-freeze`, `/gstack-guard`, `/gstack-unfreeze` |
+| 문서·회고·유틸 | `/gstack-document-generate`, `/gstack-document-release`, `/gstack-retro`, `/gstack-diagram`, `/gstack-make-pdf`, `/gstack-context-save`, `/gstack-context-restore`, `/gstack-learn`, `/gstack-codex`, `/gstack-benchmark-models`, `/gstack-plan-tune`, `/gstack-landing-report`, `/gstack-canary`, `/gstack-upgrade` |
+| 해당 없음 (iOS 전용) | `/gstack-ios-clean`, `/gstack-ios-design-review`, `/gstack-ios-fix`, `/gstack-ios-qa`, `/gstack-ios-sync` |
+
+### 사용 금지
+| 명령 | 이유 | 대신 |
+|---|---|---|
+| `/gstack-ship`, `/gstack-qa` | 자동 커밋(영문·`Co-Authored-By`)·브랜치 push·PR 생성이 커밋 규칙과 충돌. ship은 테스트 프레임워크도 자동 설치 | `/gstack-qa-only` + `commit-and-push` 스킬 |
+| `/gstack-land-and-deploy`, `/gstack-setup-deploy` | 배포는 client/server 별도 Vercel 프로젝트로 따로 진행 | Vercel 대시보드 |
+| `/gstack-setup-gbrain`, `/gstack-sync-gbrain` | 별도 메모리 체계. CLAUDE.md도 수정함 | `.claude/docs/` 메모리 |
+
+- `/gstack-design-review`는 쓸 수 있지만 **커밋 단계는 수행하지 않는다.** 수정은 워킹 트리에 남긴다.
+
+## 에이전트 팀
+`.claude/agents/`에 4개의 서브에이전트가 있다. 사용자가 팀 진행을 요청하거나 역할을 지정하면 해당 에이전트에 맡긴다. 조율은 메인 세션이 하며, 에이전트끼리는 서로 호출하지 않는다.
+
+| 에이전트 | 역할 | 담당 스킬 | 수정 범위 |
+|---|---|---|---|
+| `planner` | 기획 (Product/CEO) — 요구사항 정의, 범위 설정, 아이디어 구체화 | `/gstack-office-hours`, `/gstack-plan-ceo-review`, `/gstack-autoplan` | 없음 (보고서만) |
+| `backend` | 백엔드 — API 설계, 스키마 검토, 서버 로직 (OWASP·데이터 무결성) | `/gstack-review`, `/gstack-cso` | `server/` |
+| `frontend` | 프론트엔드·디자인 — UI 컴포넌트, 상태 관리, 디자인 일관성 (AI slop 방지) | `/gstack-design-consultation`, `/gstack-design-html`, `/gstack-design-review` | `client/` |
+| `reviewer` | 리뷰·QA — 변경 검토, 버그·예외 처리 검증, 최종 QA | `/gstack-review`, `/gstack-qa-only` | 없음 (리포트만) |
+
+**진행 흐름**: `planner` → 사용자가 자동 결정 확인 → `backend` / `frontend` 구현 → `reviewer` 검증 → 이슈가 있으면 BE/FE 재작업 → 메인 세션이 사용자 승인을 받아 `commit-and-push`
+
+- **에이전트는 커밋·push·stash·PR을 하지 않는다.** 에이전트 전용 훅(`.claude/hooks/block-agent-git.sh`)이 이를 차단한다. 커밋은 메인 세션에서만 한다.
+- 서브에이전트는 사용자에게 질문할 수 없어서 gstack 스킬의 선택지를 스스로 고른다. 에이전트가 보고한 **"사용자 확인 필요" 항목은 메인 세션이 사용자에게 확인받은 뒤** 다음 단계로 넘어간다.
+- gstack 스킬은 크기가 커서(스킬당 60~130KB) 에이전트에 미리 주입하지 않는다. 에이전트가 필요할 때 Skill 도구로 호출한다.
+
 ## 작업 방식
 - 요구사항이 모호하거나 이 문서와 충돌하는 요청이 오면, **넘겨짚지 말고 먼저 질문해서 확인**한다.
 - 스키마 변경, 새 엔드포인트 추가, 새 환경 변수 추가는 먼저 내용을 설명한 뒤 진행한다.
