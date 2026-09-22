@@ -15,6 +15,7 @@
   - `server/utils/response.js` — `sendSuccess`/`sendError` 공통 응답 헬퍼
   - `server/db/schema.sql` — `ingredients`, `favorites` 테이블 + RLS 정책 (**작성만 됨, 실행 여부는 확인 필요**)
 - **커밋·푸시 절차 스킬** — `.claude/skills/commit-and-push/SKILL.md`
+- **Prettier 자동 포맷 훅 (2026-09-22)** — client/server에 prettier devDependency와 `npm run format` 추가, 루트 `.prettierrc.json`/`.prettierignore`, `.claude/settings.json`에 PostToolUse(Edit|Write|MultiEdit)·Stop 훅. 기존 client 템플릿 코드를 한 번 일괄 포맷(세미콜론 추가만). 훅이 실제 세션에서 발동하는 것까지 확인
 - **API 실동작 검증 완료 (2026-09-21, 실제 access token으로 로컬 실행)**
   - 인증 실패 경로 — health 200, 토큰 없음/잘못된 토큰 401, 없는 경로 404, 깨진 JSON 400
   - 즐겨찾기 — 목록 200, 추가 201, 중복 409, 빈값·미전달·숫자 타입 400, 공백 트림 동작, 해제 200, 없는 항목 해제 404
@@ -52,7 +53,11 @@
 ```
 CLAUDE.md
 promptLog.md
+.prettierrc.json              # client/server 공유 포맷 설정
+.prettierignore
 .claude/
+  settings.json               # 자동 포맷 훅 (PostToolUse, Stop)
+  hooks/format.sh             # 훅 본체
   skills/commit-and-push/SKILL.md
   docs/memory.md              # 라우터
   docs/memory/progress.md
@@ -78,8 +83,9 @@ server/
   .env.example
 ```
 
-의존성 — client: react, react-dom / (dev) vite, @vitejs/plugin-react, oxlint, @types/react, @types/react-dom.
-server: express 5, @supabase/supabase-js 2, dotenv. 실행 스크립트는 `npm start`(= `node index.js`).
+의존성 — client: react, react-dom / (dev) vite, @vitejs/plugin-react, oxlint, prettier, @types/react, @types/react-dom.
+server: express 5, @supabase/supabase-js 2, dotenv / (dev) prettier. 실행 스크립트는 `npm start`(= `node index.js`).
+두 패키지 모두 `npm run format`으로 일괄 포맷(루트 ignore 파일을 `--ignore-path`로 지정).
 
 ## API 라우트
 
@@ -104,4 +110,4 @@ server: express 5, @supabase/supabase-js 2, dotenv. 실행 스크립트는 `npm 
 
 `client/src/main.jsx`는 Vite 템플릿 기본형(StrictMode + createRoot). 라우팅 라이브러리 없음.
 
-최종 갱신: 2026-09-21
+최종 갱신: 2026-09-22

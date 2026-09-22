@@ -5,6 +5,7 @@
 - 냉장고 재료로 레시피를 추천하는 서비스. 스택은 React(Vite) / Express / Supabase / Vercel로 고정.
 - 서버는 Supabase 토큰 인증, 재료 CRUD(`/api/ingredients`), 즐겨찾기 CRUD(`/api/favorites`)까지 구현·실동작 검증 완료. Supabase 스키마도 적용돼 있다.
 - 클라이언트는 "Hello, GETIT"만 렌더하는 스캐폴드 상태이고, API 호출은 아직 하나도 없다.
+- 코드 포맷은 Prettier + Claude Code 훅으로 자동 적용된다 (md 파일 제외).
 
 ## 다음 할 일
 
@@ -24,5 +25,6 @@
 | 지금까지 받은 지시와 그때의 결정 이력 | `promptLog.md` |
 | DB 테이블·RLS 정의 | `server/db/schema.sql` |
 | 커밋·푸시 절차 | `.claude/skills/commit-and-push/SKILL.md` |
+| 자동 포맷 훅이 이상하게 동작할 때 | `.claude/settings.json`, `.claude/hooks/format.sh` |
 
-최종 갱신: 2026-09-21
+최종 갱신: 2026-09-22

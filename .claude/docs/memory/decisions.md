@@ -40,8 +40,16 @@
 ## 패키지
 
 - 새 npm 라이브러리는 **이유와 대안을 먼저 설명하고 승인받은 뒤** 설치한다.
-- 현재 설치된 것 — server: `express`, `@supabase/supabase-js`, `dotenv` / client: Vite react 템플릿 기본 구성(react, react-dom, vite, @vitejs/plugin-react, oxlint, @types/*)
+- 현재 설치된 것 — server: `express`, `@supabase/supabase-js`, `dotenv`, (dev) `prettier` / client: Vite react 템플릿 기본 구성(react, react-dom, vite, @vitejs/plugin-react, oxlint, @types/*), (dev) `prettier`
 - `.env` 로딩은 Node 내장 `process.loadEnvFile()` 대신 `dotenv`를 쓰기로 했다(2026-09-21 결정).
+
+## 코드 포맷 (2026-09-22 결정)
+
+- 포맷터는 **Prettier**. oxfmt는 oxlint와 같은 계열이지만 아직 0.x라 채택하지 않았다.
+- 스타일은 **작은따옴표 + 세미콜론** (`.prettierrc.json`). server의 기존 손코딩 스타일을 기준으로 삼았다.
+- 설정은 루트 `.prettierrc.json` / `.prettierignore` 하나를 client·server가 공유한다. 폴더가 아니라 파일이라 최상위 폴더 규칙에 저촉되지 않는다.
+- **마크다운(`*.md`)은 포맷하지 않는다.** Prettier가 한글 표를 재정렬해 diff가 크게 흔들리기 때문.
+- Claude Code 훅(`.claude/settings.json` → `.claude/hooks/format.sh`)으로 자동 포맷한다. Edit·Write 직후 해당 파일, 응답 종료(Stop) 시 git 변경 파일 전체. auto 모드에서는 에이전트가 Bash로 파일을 고치므로 Stop 훅이 필요하다.
 
 ## 작업 방식
 
@@ -49,4 +57,4 @@
 - `main`에 직접 커밋하고 push한다.
 - 요구사항이 모호하거나 이 문서·CLAUDE.md와 충돌하면 넘겨짚지 말고 먼저 질문한다.
 
-최종 갱신: 2026-09-21
+최종 갱신: 2026-09-22

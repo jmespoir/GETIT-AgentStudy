@@ -1,0 +1,5 @@
+# Prettier는 .gitignore(node_modules, .env 등)도 자동으로 따른다.
+package-lock.json
+dist/
+# 한글 마크다운 표가 재정렬돼 diff가 커지므로 문서는 포맷하지 않는다.
+*.md
